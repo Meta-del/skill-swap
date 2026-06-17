@@ -1,0 +1,343 @@
+<div class="workspace-container">
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h1>Learning Workspace</h1>
+
+<h2>Participants</h2>
+<h2>{{ workspace }}</h2>
+
+
+<div class="progress mb-3">
+
+<div
+class="progress-bar"
+style="width: {{ progress }}%;">
+
+{{ progress }}%
+
+</div>
+
+</div>
+<h3>Progress: {{ progress }}%</h3>
+
+<progress
+    value="{{ progress }}"
+    max="100">
+</progress>
+<p>
+Teacher:
+{{ workspace.swap_request.receiver.username }}
+</p>
+
+<p>
+Student:
+{{ workspace.swap_request.sender.username }}
+</p>
+
+<p>
+Skill:
+{{ workspace.swap_request.skill.name }}
+</p>
+
+<hr>
+
+<h2>Learning Goals</h2>
+
+{% for goal in goals %}
+
+<form method="post"
+      action="{% url 'toggle_goal' goal.id %}">
+    {% csrf_token %}
+
+    <input
+        type="checkbox"
+        onchange="this.form.submit()"
+        {% if goal.completed %}
+        checked
+        {% endif %}
+    >
+
+    {{ goal.title }}
+
+</form>
+
+{% endfor %}
+
+<hr>
+<h3>Add Goal</h3>
+
+<form method="POST"
+      action="{% url 'add_goal' workspace.id %}">
+    {% csrf_token %}
+    <input
+        type="text"
+        name="title"
+        placeholder="New goal"
+    >
+    <button type="submit">
+        Add Goal
+    </button>
+</form>
+<h2>Lessons</h2>
+
+{% for lesson in lessons %}
+<p>
+{{ lesson.title }}
+-
+{{ lesson.scheduled_date }}
+-
+{{ lesson.scheduled_time }}
+</p>
+{% empty %}
+<p>No lessons scheduled.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Materials</h2>
+
+{% for material in materials %}
+<p>
+<a href="{{ material.file.url }}">
+{{ material.title }}
+</a>
+</p>
+{% empty %}
+<p>No materials uploaded.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Messages</h2>
+
+{% for message in messages %}
+<p>
+<strong>{{ message.sender.username }}</strong>:
+{{ message.text }}
+</p>
+{% empty %}
+<p>No messages.</p>
+{% endfor %}
+
+<hr>
+
+<h2>Send Message</h2>
+<div class="glass-card">
+
+<h3>Workspace Chat</h3>
+
+<form method="post">
+
+{% csrf_token %}
+
+<textarea
+name="content"
+class="chat-box"
+placeholder="Type your message...">
+</textarea>
+
+<button
+type="submit"
+class="btn btn-primary mt-3">
+
+Send Message
+
+</button>
+
+</form>
+
+</div>
+
+<h3>Schedule Lesson</h3>
+
+<form method="POST"
+      action="{% url 'add_lesson' workspace.id %}">
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="title"
+        placeholder="Lesson title"
+    >
+
+    <input
+        type="date"
+        name="scheduled_date"
+    >
+
+    <input
+        type="time"
+        name="scheduled_time"
+    >
+
+    <input
+        type="url"
+        name="meeting_link"
+        placeholder="Google Meet link"
+    >
+
+    <button type="submit">
+        Schedule
+    </button>
+</form>
+<h3>Upload Material</h3>
+
+<form method="POST"
+      enctype="multipart/form-data"
+      action="{% url 'add_material' workspace.id %}">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="title"
+        placeholder="Material title"
+    >
+
+    <input
+        type="file"
+        name="file"
+    >
+
+    <button type="submit">
+        Upload
+    </button>
+
+</form>
+<h2>Reviews</h2>
+
+{% for review in reviews %}
+<p>
+⭐ {{ review.rating }}/5
+</p>
+
+<p>
+{{ review.comment }}
+</p>
+
+<hr>
+{% empty %}
+<p>No reviews yet.</p>
+{% endfor %}
+<h3>
+Progress: {{ progress }}%
+</h3>
+
+<p>{{ progress }}% Complete</p>
+<h2>Leave Review</h2>
+
+<form method="post">
+
+{% csrf_token %}
+
+<textarea
+name="comment"
+class="review-box"
+placeholder="How was your learning experience?">
+</textarea>
+
+<select
+name="rating"
+class="form-control mt-3">
+
+<option value="5">⭐⭐⭐⭐⭐</option>
+<option value="4">⭐⭐⭐⭐</option>
+<option value="3">⭐⭐⭐</option>
+<option value="2">⭐⭐</option>
+<option value="1">⭐</option>
+
+</select>
+
+<button
+class="btn btn-warning mt-3">
+
+Submit Review
+
+</button>
+
+</form>
+
+
+<div class="progress mb-3">
+
+<div
+class="progress-bar"
+style="width: {{ progress }}%;">
+
+{{ progress }}%
+
+</div>
+
+</div>
+<hr>
+
+<h2>Flashcards</h2>
+
+<p>Number of flashcards: {{ flashcards.count }}</p>
+
+<a href="{% url 'add_flashcard' workspace.id %}">
+    Add Flashcard
+</a>
+
+{% for flashcard in flashcards %}
+
+<div class="card p-3 mb-3">
+
+    <h4>{{ flashcard.question }}</h4>
+
+    <button
+        onclick="toggleAnswer('{{ flashcard.id }}')">
+
+        Show Answer
+
+    </button>
+
+    <p
+        id="answer-{{ flashcard.id }}"
+        style="display:none;">
+
+        {{ flashcard.answer }}
+
+    </p>
+
+</div>
+
+{% empty %}
+
+<p>No flashcards yet.</p>
+
+{% endfor %}
+
+<script>
+
+function toggleAnswer(id){
+
+    let answer = document.getElementById(
+        'answer-' + id
+    );
+
+    if(answer.style.display === 'none'){
+
+        answer.style.display = 'block';
+
+    }else{
+
+        answer.style.display = 'none';
+
+    }
+
+}
+
+</script>
+<a
+href="{% url 'study_flashcards' workspace.id %}"
+class="btn btn-success">
+
+Study Flashcards
+
+</a>
+{% endblock %}

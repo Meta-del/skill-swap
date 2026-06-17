@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Study Mode</h1>
+
+{% for flashcard in flashcards %}
+
+<div class="card p-4 mb-4">
+
+<h3>
+{{ flashcard.question }}
+</h3>
+
+<button
+onclick="toggleAnswer('{{ flashcard.id }}')">
+
+Reveal Answer
+
+</button>
+
+<div
+id="answer-{{ flashcard.id }}"
+style="display:none;">
+
+<hr>
+
+<p>
+{{ flashcard.answer }}
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+<script>
+
+function toggleAnswer(id){
+
+let answer =
+document.getElementById(
+'answer-' + id
+);
+
+if(answer.style.display == 'none'){
+
+answer.style.display = 'block';
+
+}else{
+
+answer.style.display = 'none';
+
+}
+
+}
+
+</script>
+
+{% endblock %}

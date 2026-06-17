@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+Dashboard
+</h1>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<a href="{% url 'profile' %}">
+
+<div class="dashboard-stat">
+
+<h2>{{ skills.count }}</h2>
+
+<p>Skills</p>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="{% url 'inbox' %}">
+
+<div class="dashboard-stat">
+
+<h2>{{ received.count }}</h2>
+
+<p>Requests</p>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="{% url 'explore' %}">
+
+<div class="dashboard-stat">
+
+<h2>{{ sent.count }}</h2>
+
+<p>Explore</p>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-md-3">
+
+<a href="/workspace/">
+
+<div class="dashboard-stat">
+
+<h2>{{ workspaces.count }}</h2>
+
+<p>Workspaces</p>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+<hr>
+
+<h3>Your Workspaces</h3>
+
+{% for workspace in workspaces %}
+
+<div class="workspace-card">
+
+<a href="/workspace/{{ workspace.id }}/">
+
+Workspace #{{ workspace.id }}
+
+</a>
+
+</div>
+
+{% empty %}
+
+<p>No workspaces yet.</p>
+
+{% endfor %}
+
+
+{% endblock %}

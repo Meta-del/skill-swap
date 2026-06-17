@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card p-4">
+
+<h1>{{ user.username }}</h1>
+
+<hr>
+
+<h4>Your Skills</h4>
+
+{% for skill in skills %}
+
+<p>
+{{ skill.skill }}
+({{ skill.skill_type }})
+</p>
+
+{% endfor %}
+
+</div>
+
+<h3>My Skills</h3>
+
+<ul>
+
+{% for skill in skills %}
+
+<li>
+
+{{ skill.skill.name }}
+
+</li>
+
+{% empty %}
+
+<li>No skills added yet.</li>
+
+{% endfor %}
+
+</ul>
+<!achievements = models.ManyToManyField(
+    Achievement,
+    blank=True
+)>
+<a
+href="{% url 'edit_skills' %}"
+class="btn btn-primary">
+
+Edit Skills
+
+</a>
+{% endblock %}

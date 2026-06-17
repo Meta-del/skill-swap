@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+
+<h1>Create Account</h1>
+<div class="guide-card">
+
+<img
+src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+width="120">
+
+<h4>Welcome to SkillSwap!</h4>
+
+<p>
+I'm SkillBot 🤖
+
+I'll help you connect with amazing learners and teachers.
+</p>
+
+</div>
+<div class="auth-card">
+
+<h1>Create Account</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h3>Skills I Can Teach</h3>
+
+{{ form.teach_skills }}
+
+<h3>Skills I Want To Learn</h3>
+
+{{ form.learn_skills }}
+
+    <button type="submit">
+       
+   
+    <class="btn btn-success">
+        Join SkillSwap
+         </button>
+</form>
+</div>
+
+<a href="{% url 'login' %}">
+    Already have an account?
+</a>
+{% endblock %}
+</body>
+</html>

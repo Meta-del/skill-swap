@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="page-title">
+Requests
+</h1>
+
+{% for request in requests %}
+
+<div class="card p-4 mb-3">
+
+<h4>{{ request.sender.username }}</h4>
+
+<p>
+Wants to swap:
+{{ request.skill }}
+</p>
+
+<a
+href="{% url 'accept_request' request.id %}"
+class="btn btn-success">
+
+Accept
+
+</a>
+
+<a
+href="{% url 'reject_request' request.id %}"
+class="btn btn-danger">
+
+Reject
+
+</a>
+
+</div>
+
+{% endfor %}
+
+{% endblock %}

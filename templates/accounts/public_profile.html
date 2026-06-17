@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="profile-card">
+
+<h1>{{ profile_user.username }}</h1>
+
+<h4>Skills</h4>
+
+{% for skill in skills %}
+<p>{{ skill.skill }} - {{ skill.skill_type }}</p>
+{% endfor %}
+
+</div>
+
+{% endblock %}
