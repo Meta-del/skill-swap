@@ -125,7 +125,7 @@ def edit_skills(request):
 
     return render(
         request,
-        'skills/edit_skills.html',
+        'skills/add_skills.html',
         {
             'form': form
         }
