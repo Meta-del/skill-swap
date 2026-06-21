@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from workspace.models import Workspace, Goal
 from .models import SwapRequest
 from skills.models import UserSkill
-from workspace.models import Workspace
+
 from workspace.models import Notification
 from django.contrib import messages
 

@@ -59,3 +59,14 @@ class FlashcardForm(forms.ModelForm):
             'question',
             'answer'
         ]
+
+
+class FlashcardGeneratorForm(forms.Form):
+
+    notes = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "rows": 10
+            }
+        )
+    )

@@ -43,4 +43,38 @@ urlpatterns = [
         views.study_flashcards,
         name='study_flashcards'
     ),
+    path(
+        'goal/<int:goal_id>/complete/',
+        views.complete_goal,
+        name='complete_goal'
+    ),
+
+    path(
+        'lesson/<int:lesson_id>/complete/',
+        views.complete_lesson,
+        name='complete_lesson'
+    ),
+    path(
+        "workspace/<int:workspace_id>/generate-flashcards/",
+        views.generate_flashcards,
+        name="generate_flashcards"
+    ),
+    path(
+        "flashcard/<int:card_id>/delete/",
+        views.delete_flashcard,
+        name="delete_flashcard"
+    ),
+    path(
+        'workspace/<int:workspace_id>/quiz/',
+        views.flashcard_quiz,
+        name='flashcard_quiz'
+    ),
+
+    path(
+        'flashcard/<int:card_id>/answer/',
+        views.check_quiz_answer,
+        name='check_quiz_answer'
+    ),
+
+
 ]

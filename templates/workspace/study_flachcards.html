@@ -55,7 +55,13 @@ answer.style.display = 'none';
 }
 
 }
-
+<form method="POST"
+      action="{% url 'delete_flashcard' card.id %}">
+    {% csrf_token %}
+    <button type="submit">
+        Delete
+    </button>
+</form>
 </script>
 
 {% endblock %}

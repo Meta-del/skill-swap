@@ -340,4 +340,47 @@ class="btn btn-success">
 Study Flashcards
 
 </a>
+{% for goal in goals %}
+
+<p>
+{{ goal.title }}
+
+{% if not goal.completed %}
+<a href="{% url 'complete_goal' goal.id %}">
+    Complete
+</a>
+{% else %}
+✅ Completed
+{% endif %}
+</p>
+
+{% endfor %}
+<h3>Flashcards</h3>
+
+{% for card in flashcards %}
+
+<div>
+
+    <strong>
+        {{ card.question }}
+    </strong>
+
+    <p>
+        {{ card.answer }}
+    </p>
+
+</div>
+
+{% empty %}
+
+<p>No flashcards yet.</p>
+
+{% endfor %}
+<a href="{% url 'generate_flashcards' workspace.id %}">
+    Generate Flashcards
+</a>
+<a href="{% url 'flashcard_quiz' workspace.id %}">
+    Start Quiz
+</a>
+
 {% endblock %}

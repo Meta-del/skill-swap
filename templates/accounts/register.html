@@ -1,56 +1,75 @@
-<!DOCTYPE html>
 {% extends 'base.html' %}
 
 {% block content %}
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
 
-<h1>Create Account</h1>
+<div class="auth-card">
+
+```
 <div class="guide-card">
 
-<img
-src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
-width="120">
+    <img
+    src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+    width="120">
 
-<h4>Welcome to SkillSwap!</h4>
+    <h2>Welcome to SkillSwap!</h2>
 
-<p>
-I'm SkillBot 🤖
-
-I'll help you connect with amazing learners and teachers.
-</p>
+    <p>
+    I'm SkillBot 🤖
+    <br>
+    Let's create your account.
+    </p>
 
 </div>
-<div class="auth-card">
 
 <h1>Create Account</h1>
 
 <form method="POST">
+
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <h3>Username</h3>
+    {{ form.username }}
+
+    {% if form.email %}
+    <h3>Email</h3>
+    {{ form.email }}
+    {% endif %}
+
+    {% if form.password1 %}
+    <h3>Password</h3>
+    {{ form.password1 }}
+    {% endif %}
+
+    {% if form.password2 %}
+    <h3>Confirm Password</h3>
+    {{ form.password2 }}
+    {% endif %}
+
     <h3>Skills I Can Teach</h3>
+    {{ form.teach_skills }}
 
-{{ form.teach_skills }}
+    <h3>Skills I Want To Learn</h3>
+    {{ form.learn_skills }}
 
-<h3>Skills I Want To Learn</h3>
+    <br><br>
 
-{{ form.learn_skills }}
+    <button
+    type="submit"
+    class="btn btn-success">
 
-    <button type="submit">
-       
-   
-    <class="btn btn-success">
         Join SkillSwap
-         </button>
+
+    </button>
+
 </form>
-</div>
+
+<br>
 
 <a href="{% url 'login' %}">
     Already have an account?
 </a>
+```
+
+</div>
+
 {% endblock %}
-</body>
-</html>

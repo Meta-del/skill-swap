@@ -8,8 +8,13 @@ from .forms import LessonForm
 from .forms import MaterialForm
 from .forms import ReviewForm
 from django.contrib.auth.decorators import login_required
-# from .models import Flashcard
-# from .forms import FlashcardForm
+from .models import Flashcard
+from .forms import FlashcardForm
+from .models import Progress
+from .forms import FlashcardGeneratorForm
+from .services import generate_flashcards_from_notes
+from .models import Flashcard
+from random import choice
 
 
 def workspace_detail(request, workspace_id):
@@ -71,6 +76,9 @@ def workspace_detail(request, workspace_id):
     reviews = Review.objects.filter(
         workspace=workspace
     )
+    progress, created = Progress.objects.get_or_create(
+        workspace=workspace
+    )
 
     return render(
         request,
@@ -86,6 +94,7 @@ def workspace_detail(request, workspace_id):
             'progress': progress,
             'review_form': review_form,
             'flashcards': flashcards,
+
 
         }
     )
@@ -235,13 +244,9 @@ def add_flashcard(request, workspace_id):
 
         if form.is_valid():
 
-            flashcard = form.save(
-                commit=False
-            )
-
-            flashcard.workspace = workspace
-
-            flashcard.save()
+            card = form.save(commit=False)
+            card.workspace = workspace
+            card.save()
 
             return redirect(
                 'workspace_detail',
@@ -271,12 +276,191 @@ def study_flashcards(request, workspace_id):
     flashcards = Flashcard.objects.filter(
         workspace=workspace
     )
-
     return render(
         request,
         'workspace/study_flashcards.html',
         {
             'workspace': workspace,
             'flashcards': flashcards
+        }
+    )
+
+
+@login_required
+def complete_goal(request, goal_id):
+
+    goal = get_object_or_404(
+        Goal,
+        id=goal_id
+    )
+
+    goal.completed = True
+    goal.save()
+
+    progress, created = Progress.objects.get_or_create(
+        workspace=goal.workspace
+    )
+
+    progress.goals_completed += 1
+    progress.total_points += 5
+    progress.save()
+
+    return redirect(
+        'workspace_detail',
+        workspace_id=goal.workspace.id
+    )
+
+
+@login_required
+def complete_lesson(request, lesson_id):
+
+    lesson = get_object_or_404(
+        Lesson,
+        id=lesson_id
+    )
+
+    lesson.completed = True
+    lesson.save()
+
+    progress, created = Progress.objects.get_or_create(
+        workspace=lesson.workspace
+    )
+
+    progress.lessons_completed += 1
+    progress.total_points += 10
+    progress.save()
+
+    return redirect(
+        'workspace_detail',
+        workspace_id=lesson.workspace.id
+    )
+
+
+@login_required
+def generate_flashcards(request, workspace_id):
+
+    workspace = get_object_or_404(
+        Workspace,
+        id=workspace_id
+    )
+
+    if request.method == "POST":
+
+        form = FlashcardGeneratorForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            notes = form.cleaned_data["notes"]
+
+            cards = generate_flashcards_from_notes(
+                notes
+            )
+
+            for card in cards:
+
+                Flashcard.objects.create(
+                    workspace=workspace,
+                    question=card["question"],
+                    answer=card["answer"]
+                )
+
+            return redirect(
+                "workspace_detail",
+                workspace_id=workspace.id
+            )
+
+    else:
+
+        form = FlashcardGeneratorForm()
+
+    return render(
+        request,
+        "workspace/generate_flashcards.html",
+        {
+            "form": form,
+            "workspace": workspace
+        }
+    )
+
+
+@login_required
+def delete_flashcard(request, card_id):
+
+    card = get_object_or_404(
+        Flashcard,
+        id=card_id
+    )
+
+    workspace_id = card.workspace.id
+
+    card.delete()
+
+    return redirect(
+        "workspace_detail",
+        workspace_id=workspace_id
+    )
+
+
+@login_required
+def check_quiz_answer(request, card_id):
+
+    card = get_object_or_404(
+        Flashcard,
+        id=card_id
+    )
+
+    user_answer = request.POST.get(
+        'answer',
+        ''
+    ).strip()
+
+    correct = (
+        user_answer.lower()
+        in card.answer.lower()
+    )
+
+    return render(
+        request,
+        'workspace/quiz_result.html',
+        {
+            'card': card,
+            'user_answer': user_answer,
+            'correct': correct
+        }
+    )
+
+
+@login_required
+def flashcard_quiz(request, workspace_id):
+
+    workspace = get_object_or_404(
+        Workspace,
+        id=workspace_id
+    )
+
+    flashcards = Flashcard.objects.filter(
+        workspace=workspace
+    )
+
+    if not flashcards.exists():
+
+        return render(
+            request,
+            'workspace/quiz.html',
+            {
+                'error': 'No flashcards available.'
+            }
+        )
+
+    card = choice(list(flashcards))
+
+    return render(
+        request,
+        'workspace/quiz.html',
+        {
+            'card': card,
+            'workspace': workspace
         }
     )

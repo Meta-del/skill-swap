@@ -149,24 +149,6 @@ class Flashcard(models.Model):
     question = models.CharField(
         max_length=255
     )
-    DIFFICULTY_CHOICES = [
-        ('Easy', 'Easy'),
-        ('Medium', 'Medium'),
-        ('Hard', 'Hard'),
-    ]
-
-    difficulty = models.CharField(
-        max_length=20,
-        choices=DIFFICULTY_CHOICES,
-        default='Medium'
-    )
-    times_correct = models.IntegerField(
-        default=0
-    )
-
-    times_wrong = models.IntegerField(
-        default=0
-    )
 
     answer = models.TextField()
 
@@ -174,7 +156,7 @@ class Flashcard(models.Model):
         return self.question
 
 
-'''class Summary(models.Model):
+class Summary(models.Model):
 
     workspace = models.ForeignKey(
         Workspace,
@@ -190,4 +172,38 @@ class Flashcard(models.Model):
 
     created_at = models.DateTimeField(
         auto_now_add=True
-    )'''
+    )
+
+
+class Progress(models.Model):
+
+    workspace = models.OneToOneField(
+        Workspace,
+        on_delete=models.CASCADE
+    )
+
+    lessons_completed = models.IntegerField(
+        default=0
+    )
+
+    goals_completed = models.IntegerField(
+        default=0
+    )
+
+    total_points = models.IntegerField(
+        default=0
+    )
+
+
+class Achievement(models.Model):
+
+    name = models.CharField(
+        max_length=100
+    )
+
+    description = models.TextField()
+
+    icon = models.CharField(
+        max_length=50,
+        default='🏆'
+    )

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Flashcard Quiz</h2>
+
+{% if error %}
+
+<p>{{ error }}</p>
+
+{% else %}
+
+<h3>{{ card.question }}</h3>
+
+<form method="POST"
+      action="{% url 'check_quiz_answer' card.id %}">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="answer"
+        placeholder="Your answer"
+    >
+
+    <button type="submit">
+        Submit
+    </button>
+
+</form>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Quiz Result</h2>
+
+{% if correct %}
+
+<h3>✅ Correct!</h3>
+
+{% else %}
+
+<h3>❌ Not Quite</h3>
+
+{% endif %}
+
+<p>
+<strong>Your Answer:</strong>
+{{ user_answer }}
+</p>
+
+<p>
+<strong>Correct Answer:</strong>
+{{ card.answer }}
+</p>
+
+<a href="{% url 'flashcard_quiz' card.workspace.id %}">
+    Next Question
+</a>
+
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-
+from django.urls import include
 from django.contrib.auth import views as auth_views
 from .views import home
 
@@ -26,5 +26,9 @@ urlpatterns = [
     ),
     path('swaps/', include('swaps.urls')),
     path('workspace/', include('workspace.urls')),
+    path(
+        'accounts/',
+        include('allauth.urls')
+    ),
 
 ]
