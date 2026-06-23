@@ -167,7 +167,7 @@ LOGOUT_REDIRECT_URL = 'home'
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = 'static/'
-
+ALLOWED_HOSTS = ["*"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 
@@ -177,3 +177,8 @@ ACCOUNT_SIGNUP_FIELDS = [
     'password1*',
     'password2*',
 ]
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_REDIRECT_URL = '/'

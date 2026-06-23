@@ -3,38 +3,43 @@
 {% block content %}
 
 <h1 class="page-title">
-Requests
+    Requests
 </h1>
 
-{% for request in requests %}
+{% if requests %}
 
-<div class="card p-4 mb-3">
+    {% for request in requests %}
 
-<h4>{{ request.sender.username }}</h4>
+        <div class="card p-4 mb-3">
 
-<p>
-Wants to swap:
-{{ request.skill }}
-</p>
+            <h4>{{ request.sender.username }}</h4>
 
-<a
-href="{% url 'accept_request' request.id %}"
-class="btn btn-success">
+            <p>
+                Wants to swap:
+                {{ request.skill }}
+            </p>
 
-Accept
+            <a href="{% url 'accept_request' request.id %}"
+               class="btn btn-success">
+                Accept
+            </a>
 
-</a>
+            <a href="{% url 'reject_request' request.id %}"
+               class="btn btn-danger">
+                Reject
+            </a>
 
-<a
-href="{% url 'reject_request' request.id %}"
-class="btn btn-danger">
+        </div>
 
-Reject
+    {% endfor %}
 
-</a>
+{% else %}
 
-</div>
+    <div class="card p-4 text-center">
+        <h3>No requests yet</h3>
+        <p>When someone sends you a swap request, it will appear here.</p>
+    </div>
 
-{% endfor %}
+{% endif %}
 
 {% endblock %}

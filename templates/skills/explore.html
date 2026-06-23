@@ -4,34 +4,42 @@
 
 <h1>Explore Matches</h1>
 
-{% for match in matches %}
+<form method="GET">
+    <input
+        type="text"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search skills or users">
 
-<p>
-    {{ match.user.username }}
-    teaches
-    {{ match.skill.name }}
-</p>
-<a href="{% url 'explore' %}">Explore</a>
-<a href="{% url 'send_request' match.id %}">
-    Send Request
-</a>
+    <button type="submit">
+        Search
+    </button>
+</form>
 
 <hr>
-<form method="GET">
 
-<input
-type="text"
-name="q"
-placeholder="Search skills">
+{% if matches %}
 
-<button type="submit">
-Search
-</button>
+    {% for match in matches %}
 
-</form>
-{% empty %}
+        <p>
+            <strong>{{ match.user.username }}</strong>
+            teaches
+            <strong>{{ match.skill.name }}</strong>
+        </p>
 
-<p>No matches found.</p>
+        <a href="{% url 'send_request' match.id %}">
+            Send Request
+        </a>
 
-{% endfor %}
+        <hr>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No matches found.</p>
+
+{% endif %}
+
 {% endblock %}

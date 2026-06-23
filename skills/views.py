@@ -9,8 +9,7 @@ from .models import UserSkill
 def explore_view(request):
 
     user = request.user
-
-    matches = []
+    query = request.GET.get('q', '').strip()
 
     my_learning = UserSkill.objects.filter(
         user=user,
@@ -21,6 +20,8 @@ def explore_view(request):
         user=user,
         skill_type='teach'
     ).values_list('skill', flat=True)
+
+    matches = []
 
     matches.extend(
         UserSkill.objects.filter(
@@ -36,26 +37,21 @@ def explore_view(request):
         ).exclude(user=user)
     )
 
+    if query:
+        matches = [
+            match for match in matches
+            if query.lower() in match.skill.name.lower()
+            or query.lower() in match.user.username.lower()
+        ]
+
     return render(
         request,
         'skills/explore.html',
         {
-            'matches': matches
+            'matches': matches,
+            'query': query
         }
     )
-    query = request.GET.get('q')
-
-    if query:
-
-        users = UserSkill.objects.filter(
-            Q(skill__name__icontains=query)
-            |
-            Q(skill__category__icontains=query)
-        )
-
-    else:
-
-        users = UserSkill.objects.all()
 
 
 @login_required
@@ -110,11 +106,20 @@ def edit_skills(request):
                 user=request.user
             ).delete()
 
-            for skill in form.cleaned_data['skills']:
+            for skill in form.cleaned_data['teach_skills']:
 
                 UserSkill.objects.create(
                     user=request.user,
-                    skill=skill
+                    skill=skill,
+                    skill_type='teach'
+                )
+
+            for skill in form.cleaned_data['learn_skills']:
+
+                UserSkill.objects.create(
+                    user=request.user,
+                    skill=skill,
+                    skill_type='learn'
                 )
 
             return redirect('profile')

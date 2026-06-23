@@ -2,7 +2,11 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
+   <h3>Skills I Can Teach</h3>
+{{ form.teach_skills }}
+
+<h3>Skills I Want To Learn</h3>
+{{ form.learn_skills }}
 
     <button type="submit">Save</button>
 </form>

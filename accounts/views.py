@@ -23,19 +23,29 @@ def profile_view(request):
 def register_view(request):
 
     if request.method == 'POST':
+
         form = RegisterForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+
+            user = form.save()
+
             return redirect('login')
 
+        else:
+
+            print(form.errors)
+
     else:
+
         form = RegisterForm()
 
     return render(
         request,
         'accounts/register.html',
-        {'form': form}
+        {
+            'form': form
+        }
     )
 
 
